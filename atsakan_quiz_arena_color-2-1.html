@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ածական․ Quiz Arena</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Noto+Sans+Armenian:wght@400;600;700;800&display=swap');
+:root{--bg:#101426;--panel:#1b2340;--panel2:#222c4d;--text:#f5f6ff;--muted:#aab4d4;--violet:#9277ff;--cyan:#62e5df;--pink:#ff79ad;--yellow:#ffd36b;--green:#6de0a9}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 15% 0%,#33265f 0,transparent 36%),radial-gradient(ellipse at 90% 90%,#173e54 0,transparent 32%),var(--bg);font-family:Manrope,'Noto Sans Armenian',sans-serif;color:var(--text)}
+.wrap{max-width:1060px;margin:auto;padding:22px 18px 50px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.brand{font-size:13px;font-weight:900;letter-spacing:1.5px;color:var(--cyan)}.topright{display:flex;gap:9px;align-items:center}.chip{background:#ffffff12;border:1px solid #ffffff20;padding:9px 13px;border-radius:13px;font-weight:800;font-size:13px}.sound-toggle{color:var(--text);font-family:inherit;cursor:pointer}.sound-toggle:hover{border-color:var(--cyan)}
+.hero{text-align:center;padding:38px 10px 26px}.eyebrow{display:inline-block;color:var(--cyan);background:#62e5df14;border:1px solid #62e5df40;padding:7px 13px;border-radius:30px;font-size:12px;font-weight:900;letter-spacing:1px}.hero h1{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:15px 0 12px;letter-spacing:-2px}.grad{background:linear-gradient(90deg,#8e7bff,#62e5df,#ff83b4);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);font-weight:600;max-width:630px;margin:0 auto;line-height:1.7}
+.panel{background:linear-gradient(145deg,#202947ed,#171f38ed);border:1px solid #ffffff20;border-radius:24px;padding:clamp(18px,4vw,28px);box-shadow:0 20px 60px #0003}.setup{max-width:800px;margin:0 auto}.sectiontitle{font-size:18px;font-weight:900;margin:0 0 14px}.modegrid,.worldgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.mode,.world{border:1px solid #ffffff20;background:#ffffff08;color:var(--text);border-radius:18px;padding:17px;text-align:left;cursor:pointer;transition:.18s;font-family:inherit}.mode:hover,.world:hover{transform:translateY(-3px);border-color:#9277ff}.mode.active{border:2px solid var(--violet);background:#9277ff20}.mode .big{font-size:28px}.mode strong,.world strong{display:block;font-size:15px;margin:7px 0}.mode small,.world small{color:var(--muted);line-height:1.5;font-weight:600}.fieldrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:17px 0}.field label{display:block;color:var(--muted);font-size:12px;font-weight:800;margin:0 0 7px}.field input{width:100%;background:#111a30;border:1px solid #ffffff25;border-radius:12px;padding:12px;color:white;font:700 15px inherit;font-family:inherit;outline:none}.field input:focus{border-color:var(--cyan)}
+.worldgrid{grid-template-columns:repeat(3,1fr)}.world{min-height:145px}.world .icon{font-size:28px}.world small{display:block}.world.locked{opacity:.42;cursor:not-allowed}.world.done{border-color:#6de0a9;background:#6de0a912}
+.btn{border:0;border-radius:14px;padding:13px 20px;background:linear-gradient(100deg,#806cff,#a36cff);color:white;font:900 15px inherit;font-family:inherit;cursor:pointer;box-shadow:0 7px 22px #806cff40;transition:.15s}.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}.btn.secondary{background:#ffffff12;border:1px solid #ffffff25;box-shadow:none}.btn.full{width:100%;margin-top:17px}
+.hidden{display:none!important}.muted{color:var(--muted)}.divider{height:1px;background:#ffffff18;margin:20px 0}
+.game{max-width:850px;margin:0 auto}.gamehead{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.worldname{font-weight:900;font-size:14px;color:var(--cyan)}.turns{display:flex;gap:8px}.player{padding:8px 12px;border-radius:12px;background:#ffffff0c;border:1px solid #ffffff1a;color:var(--muted);font-weight:800;font-size:12px}.player.active{color:white;border-color:var(--yellow);background:#ffd36b18}.scoreboard{display:flex;gap:10px;margin:16px 0}.score{flex:1;padding:12px 14px;background:#ffffff0a;border:1px solid #ffffff17;border-radius:14px}.score span{display:block;color:var(--muted);font-size:11px;font-weight:800}.score b{font-size:22px}.progress{height:7px;background:#ffffff16;border-radius:20px;overflow:hidden;margin:18px 0}.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--cyan));transition:.3s}
+.qmeta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;font-weight:800}.question{font-size:clamp(21px,3.8vw,30px);line-height:1.4;font-weight:900;margin:22px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}.answer{padding:16px;border:1px solid #ffffff25;border-radius:15px;background:#ffffff0a;color:white;text-align:left;font:800 15px inherit;font-family:inherit;cursor:pointer;min-height:65px;transition:.15s}.answer:hover:not(:disabled){border-color:var(--violet);background:#9277ff18;transform:translateY(-2px)}.answer.correct{border-color:var(--green);background:#6de0a91c}.answer.wrong{border-color:var(--pink);background:#ff79ad1c}.answer:disabled{cursor:default}.feedback{min-height:48px;padding-top:15px;font-weight:800;line-height:1.6}.feedback.good{color:var(--green)}.feedback.bad{color:#ff9abb}.explain{background:#ffd36b12;border:1px solid #ffd36b35;border-radius:13px;padding:13px;color:#ffe5a1;font-size:13px;font-weight:700;line-height:1.6;margin:9px 0 16px}
+.end{text-align:center;max-width:700px;margin:0 auto}.trophy{font-size:62px}.end h2{font-size:32px;margin:7px}.end .summary{color:var(--muted);line-height:1.7;font-weight:700}
+.footer{text-align:center;color:#7782a8;font-size:12px;margin-top:28px}
+@media(max-width:650px){.worldgrid{grid-template-columns:1fr 1fr}.answers{grid-template-columns:1fr}.fieldrow{grid-template-columns:1fr}.hero{padding-top:28px}.scoreboard{gap:6px}.score{padding:10px}.score b{font-size:18px}}
+
+.world-card:nth-child(6n+1){background:linear-gradient(145deg,#30205e,#1a2345);border-color:#a78bfa55}
+.world-card:nth-child(6n+2){background:linear-gradient(145deg,#153e50,#182846);border-color:#22d3ee55}
+.world-card:nth-child(6n+3){background:linear-gradient(145deg,#542747,#252044);border-color:#fb718555}
+.world-card:nth-child(6n+4){background:linear-gradient(145deg,#244735,#192d3d);border-color:#4ade8055}
+.world-card:nth-child(6n+5){background:linear-gradient(145deg,#59401e,#2b2944);border-color:#fbbf2455}
+.world-card:nth-child(6n){background:linear-gradient(145deg,#243c69,#30204f);border-color:#60a5fa55}
+.answer,.option{transition:transform .16s ease,filter .16s ease,border-color .16s ease}
+.answer:hover,.option:hover{filter:brightness(1.2);transform:translateY(-2px);border-color:#67e8f9}
+.progress>div,.bar>div{background:linear-gradient(90deg,#fb7185,#a78bfa,#22d3ee,#4ade80)!important}
+h1,.hero-title{background:linear-gradient(90deg,#f9a8d4,#c4b5fd,#67e8f9,#86efac);-webkit-background-clip:text;background-clip:text;color:transparent}
+button.primary{background:linear-gradient(100deg,#f43f8e,#8b5cf6,#06b6d4)!important;box-shadow:0 8px 24px #8b5cf655}
+button.primary:hover{filter:brightness(1.12);transform:translateY(-1px)}
+</style></head>
+<body><div class="wrap">
+<div class="top"><div class="brand">✦ QUIZ ARENA / ՀԱՅՈՑ ԼԵԶՈՒ</div><div class="topright"><div class="chip">7-ՐԴ ԴԱՍԱՐԱՆ</div><div class="chip">ԱԾԱԿԱՆ</div><button class="chip sound-toggle" id="soundToggle" onclick="toggleSound()" aria-pressed="true">🔊 Ձայնը՝ միացված</button></div></div>
+<header class="hero"><div class="eyebrow">ԳԻՏԵԼԻՔ • ՄՐՑԱԿՑՈՒԹՅՈՒՆ • ԽԱՂ</div><h1>ԱԾԱԿԱՆ <span class="grad">ARENA</span></h1><p>Ժամանակակից վիկտորինա՝ ածականի աշխարհներով։ Մարզվիր մենակ կամ մարտահրավեր նետիր ընկերոջդ։</p></header>
+
+<section id="setup" class="setup panel">
+<h2 class="sectiontitle">01 / Ընտրիր խաղի ռեժիմը</h2>
+<div class="modegrid">
+<button class="mode active" id="soloMode" onclick="setMode('solo')"><span class="big">🎯</span><strong>Մեկ խաղացող</strong><small>Անցիր աշխարհներով, հավաքիր միավորներ և բարելավիր արդյունքդ։</small></button>
+<button class="mode" id="duoMode" onclick="setMode('duo')"><span class="big">⚔️</span><strong>Զույգով մրցում</strong><small>Երկու խաղացող՝ հերթով պատասխանելով նույն հարցերին։ Հաղթում է ավելի շատ միավոր հավաքողը։</small></button>
+</div>
+<div class="fieldrow">
+<div class="field"><label for="p1">ԽԱՂԱՑՈՂ 1</label><input id="p1" value="Խաղացող 1" maxlength="18"></div>
+<div class="field" id="p2field"><label for="p2">ԽԱՂԱՑՈՂ 2</label><input id="p2" value="Խաղացող 2" maxlength="18"></div>
+</div>
+<div class="divider"></div>
+<h2 class="sectiontitle">02 / Ընտրիր աշխարհը</h2>
+<div class="worldgrid" id="worldgrid">
+<button class="world" onclick="startWorld(0)"><span class="icon">💎</span><strong>Ածականի հիմունքներ</strong><small>Իմաստ, հարցեր, հատկանիշ</small></button>
+<button class="world" onclick="startWorld(1)"><span class="icon">🧭</span><strong>Ածականի տեսակներ</strong><small>Որակական և հարաբերական</small></button>
+<button class="world" onclick="startWorld(2)"><span class="icon">📈</span><strong>Համեմատության աստիճաններ</strong><small>Դրական, բաղդատական, գերադրական</small></button>
+<button class="world" onclick="startWorld(3)"><span class="icon">🧱</span><strong>Ածականների կազմություն</strong><small>Ածանցավոր և բարդ ածականներ</small></button>
+<button class="world" onclick="startWorld(4)"><span class="icon">🔍</span><strong>Ածականը նախադասության մեջ</strong><small>Գտի՛ր և վերլուծի՛ր</small></button>
+<button class="world" onclick="startWorld(5)"><span class="icon">🏆</span><strong>Մեծ մարտահրավեր</strong><small>Խառը հարցեր՝ բոլոր թեմաներից</small></button>
+</div>
+<p class="muted" style="font-size:12px;font-weight:700;margin:15px 0 0">Յուրաքանչյուր աշխարհում կա 5 հարց։ Զույգով խաղալիս հերթը ինքնաբերաբար կփոխվի յուրաքանչյուր հարցից հետո։</p>
+</section>
+
+<section id="game" class="game panel hidden">
+<div class="gamehead"><div><div class="worldname" id="worldTitle"></div><div class="muted" id="modeLabel" style="font-size:12px;font-weight:800;margin-top:5px"></div></div><button class="btn secondary" onclick="backToSetup()">✕ Դուրս գալ</button></div>
+<div class="scoreboard" id="scores"></div>
+<div class="progress"><div id="bar"></div></div>
+<div class="qmeta"><span id="qnum">ՀԱՐՑ 1 / 5</span><span id="turnlabel">Հերթը՝ Խաղացող 1</span></div>
+<div class="question" id="question"></div>
+<div class="answers" id="answers"></div>
+<div class="feedback" id="feedback"></div><div class="explain hidden" id="explain"></div>
+<div style="display:flex;justify-content:flex-end"><button class="btn hidden" id="next" onclick="nextQ()">Հաջորդը →</button></div>
+</section>
+
+<section id="result" class="end panel hidden"><div class="trophy" id="trophy">🏆</div><div class="eyebrow">ԱՇԽԱՐՀՆ ԱՎԱՐՏՎԱԾ Է</div><h2 id="resultTitle"></h2><p class="summary" id="resultText"></p><div id="finalScores" style="margin:20px 0"></div><button class="btn" onclick="backToSetup()">Ընտրել այլ աշխարհ</button> <button class="btn secondary" onclick="replay()">Կրկին խաղալ</button></section>
+<div class="footer">ԱԾԱԿԱՆ ARENA • Սովորի՛ր, խաղա՛, հաղթի՛ր ✦</div>
+</div>
+<script>
+let soundOn=true,audioCtx=null;
+function toggleSound(){
+  soundOn=!soundOn;
+  $('soundToggle').textContent=soundOn?'🔊 Ձայնը՝ միացված':'🔇 Ձայնը՝ անջատված';
+  $('soundToggle').setAttribute('aria-pressed',String(soundOn));
+  if(soundOn) playSound('click');
+}
+function playSound(type){
+  if(!soundOn)return;
+  try{
+    const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+    if(!AudioContextClass)return;
+    if(!audioCtx)audioCtx=new AudioContextClass();
+    if(audioCtx.state==='suspended')audioCtx.resume();
+    const now=audioCtx.currentTime;
+    const notes=type==='correct'?[523.25,659.25,783.99]:
+                type==='wrong'?[220,164.81]:
+                type==='finish'?[523.25,659.25,783.99,1046.5]:
+                [440];
+    notes.forEach((freq,index)=>{
+      const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+      osc.type=type==='wrong'?'triangle':'sine';
+      osc.frequency.setValueAtTime(freq,now+index*0.11);
+      gain.gain.setValueAtTime(0.0001,now+index*0.11);
+      gain.gain.exponentialRampToValueAtTime(type==='finish'?0.12:0.085,now+index*0.11+0.025);
+      gain.gain.exponentialRampToValueAtTime(0.0001,now+index*0.11+0.19);
+      osc.connect(gain);gain.connect(audioCtx.destination);
+      osc.start(now+index*0.11);osc.stop(now+index*0.11+0.21);
+    });
+  }catch(e){}
+}
+const worlds=[
+{name:"💎 Ածականի հիմունքներ",qs:[
+["Ի՞նչ է ցույց տալիս ածականը։",["Առարկայի գործողությունը","Առարկայի հատկանիշը","Առարկայի թիվը","Առարկայի անունը"],1,"Ածականը ցույց է տալիս առարկայի հատկանիշը՝ գույնը, չափը, համը, բնույթը և այլն։"],
+["Ո՞ր հարցերին է պատասխանում ածականը։",["Ո՞վ, ի՞նչ","Ի՞նչ անել, ի՞նչ լինել","Ինչպիսի՞, ո՞ր","Քանի՞, որքա՞ն"],2,"Ածականը պատասխանում է ինչպիսի՞ և ո՞ր հարցերին։"],
+["Ո՞ր բառն է ածական։",["Ծաղիկ","Կանաչ","Վազել","Աշակերտ"],1,"Կանաչ բառը ցույց է տալիս առարկայի գույնը, այսինքն՝ հատկանիշ։"],
+["Ո՞րն է ածականը «Բարձր լեռը երևում էր հեռվից» նախադասության մեջ։",["Լեռը","Երևում էր","Հեռվից","Բարձր"],3,"Բարձր բառը բնութագրում է լեռը։"],
+["Ո՞ր շարքում են միայն ածականներ։",["Գեղեցիկ, խելացի, կապույտ","Գիրք, սեղան, մատիտ","Վազել, կարդալ, գրել","Երեք, հինգ, տասը"],0,"Գեղեցիկը, խելացին և կապույտը հատկանիշ են ցույց տալիս։"]
+]},
+{name:"🧭 Ածականի տեսակներ",qs:[
+["Ըստ իմաստի՝ ածականները քանի՞ հիմնական տեսակ ունեն։",["Մեկ","Երկու","Երեք","Չորս"],1,"Ածականները լինում են որակական և հարաբերական։"],
+["Ո՞րն է որակական ածական։",["Փայտե","Ամառային","Քաղցր","Քարե"],2,"Քաղցր բառը անմիջականորեն ցույց է տալիս համի որակ։"],
+["Ո՞րն է հարաբերական ածական։",["Բարի","Կարմիր","Փայտե","Գեղեցիկ"],2,"Փայտե ածականը ցույց է տալիս նյութի հետ ունեցած հարաբերությունը։"],
+["Ո՞ր ածականն է ցույց տալիս առարկայի նյութը։",["Ուրախ","Արծաթե","Բարձր","Խելացի"],1,"Արծաթե ածականը ցույց է տալիս, թե ինչ նյութից է առարկան։"],
+["Ո՞ր շարքում են միայն հարաբերական ածականներ։",["Ձմեռային, քարե, փայտե","Քաջ, բարի, ուրախ","Գեղեցիկ, կապույտ, մեծ","Խելացի, տաք, քաղցր"],0,"Ձմեռայինը, քարեն և փայտեն հարաբերություն են ցույց տալիս։"]
+]},
+{name:"📈 Համեմատության աստիճաններ",qs:[
+["Ո՞ր ածականներն են սովորաբար ունենում համեմատության աստիճաններ։",["Հարաբերական","Որակական","Բոլոր ածականները","Ոչ մի ածական"],1,"Համեմատության աստիճաններ սովորաբար ունենում են որակական ածականները։"],
+["Քանի՞ համեմատության աստիճան ունի որակական ածականը։",["Երկու","Երեք","Չորս","Հինգ"],1,"Դրանք երեքն են՝ դրական, բաղդատական և գերադրական։"],
+["Ո՞րն է «գեղեցիկ» ածականի բաղդատական աստիճանը։",["Ամենագեղեցիկ","Գեղեցիկ","Ավելի գեղեցիկ","Գեղեցկություն"],2,"Բաղդատական աստիճանը ցույց է տալիս համեմատական չափ՝ ավելի գեղեցիկ։"],
+["Ո՞րն է «բարձր» ածականի գերադրական աստիճանը։",["Բարձր","Ավելի բարձր","Ամենաբարձր","Բարձրություն"],2,"Գերադրական աստիճանը ցույց է տալիս հատկանիշի առավելագույն չափը՝ ամենաբարձր։"],
+["Ո՞ր շարքում են աստիճանները ճիշտ հերթականությամբ։",["լավ — ավելի լավ — ամենալավ","լավ — լավություն — լավիկ","լավ — ամենալավ — ավելի լավ","լավ — լավը — լավեր"],0,"Դրական՝ լավ, բաղդատական՝ ավելի լավ, գերադրական՝ ամենալավ։"]
+]},
+{name:"🧱 Ածականների կազմություն",qs:[
+["Ո՞ր ածականն է ածանցավոր։",["Մեծ","Անգույն","Սևաչյա","Քաղցր"],1,"Անգույն բառը կազմված է ան- նախածանցով և գույն արմատով։"],
+["Ո՞ր ածականն է բարդ։",["Անուշ","Մեծահոգի","Կապույտ","Խելացի"],1,"Մեծահոգի բառը կազմված է երկու արմատից՝ մեծ և հոգի։"],
+["Ո՞ր բառն է պարզ ածական։",["Անգույն","Մեծահոգի","Քաղցր","Արևոտ"],2,"Քաղցր բառը մեկ արմատից է և չունի ածանց։"],
+["Ո՞ր ածականն ունի -ավոր ածանցը։",["Գունավոր","Անգույն","Սևաչյա","Մեծ"],0,"Գունավոր բառի ածանցն է -ավոր։"],
+["Ո՞ր տարբերակում է ածականը կազմված նախածանցով։",["Արևոտ","Անհամ","Քարե","Մեծասիրտ"],1,"Անհամ բառը կազմված է ան- նախածանցով։"]
+]},
+{name:"🔍 Ածականը նախադասության մեջ",qs:[
+["«Կապույտ թիթեռը թռավ» նախադասության մեջ ո՞ր բառն է ածական։",["Թիթեռը","Թռավ","Կապույտ","Նախադասություն"],2,"Կապույտ բառը ցույց է տալիս թիթեռի գույնը։"],
+["«Անին ընտրեց ամենագեղեցիկ ծաղիկը» նախադասության մեջ ո՞ր աստիճանով է ածականը։",["Դրական","Բաղդատական","Գերադրական","Հարաբերական"],2,"Ամենագեղեցիկ բառը գերադրական աստիճան է։"],
+["«Փայտե սեղանը նոր էր» նախադասության մեջ «փայտե»-ն ի՞նչ տեսակ է։",["Որակական","Հարաբերական","Գերադրական","Բաղդատական"],1,"Փայտե բառը ցույց է տալիս նյութի հետ հարաբերությունը։"],
+["Ո՞ր նախադասության մեջ կա երկու ածական։",["Արևը ծագեց։","Փոքրիկ սպիտակ կատուն քնեց։","Երեխան վազեց։","Գիրքը սեղանին է։"],1,"Փոքրիկ և սպիտակ բառերը երկուսն էլ հատկանիշ են ցույց տալիս։"],
+["Ո՞ր նախադասության մեջ ածականը գործածված է բաղդատական աստիճանով։",["Այս ծաղիկը գեղեցիկ է։","Նա ամենախելացին է։","Այս ճանապարհն ավելի կարճ է։","Ծաղիկը կարմիր է։"],2,"Ավելի կարճ ձևը բաղդատական աստիճան է։"]
+]},
+{name:"🏆 Մեծ մարտահրավեր",qs:[
+["Ո՞ր պնդումն է ճիշտ։",["Բոլոր ածականներն ունեն համեմատության աստիճաններ։","Ածականը ցույց է տալիս գործողություն։","Որակական ածականները կարող են ունենալ համեմատության աստիճաններ։","Հարաբերական ածականները միշտ գերադրական են։"],2,"Համեմատության աստիճաններ սովորաբար ունենում են որակական ածականները։"],
+["Ո՞ր շարքում են ածականները դասավորված՝ պարզ, ածանցավոր, բարդ։",["Քաղցր, գունավոր, մեծահոգի","Գունավոր, քաղցր, մեծահոգի","Մեծահոգի, գունավոր, քաղցր","Քաղցր, մեծահոգի, գունավոր"],0,"Քաղցր՝ պարզ, գունավոր՝ ածանցավոր, մեծահոգի՝ բարդ։"],
+["Ո՞րն է «տաք» ածականի գերադրական աստիճանը։",["Ավելի տաք","Ամենատաք","Տաքություն","Տաքավուն"],1,"Ամենատաք-ը գերադրական աստիճանն է։"],
+["Ո՞ր ածականն է հարաբերական և ցույց է տալիս ժամանակ։",["Ուրախ","Գարնանային","Քաղցր","Համարձակ"],1,"Գարնանայինը հարաբերություն է ցույց տալիս տարվա եղանակի՝ գարնան հետ։"],
+["«Ամենաբարձր շենքը քաղաքի կենտրոնում է» նախադասության մեջ «ամենաբարձր»-ը ո՞ր աստիճանն է։",["Դրական","Բաղդատական","Գերադրական","Հարաբերական"],2,"Ամենա- նախածանցով կազմված ձևը գերադրական աստիճան է։"]
+]}
+];
+let mode='solo',wi=0,qi=0,turn=0,scores=[0,0],names=['Խաղացող 1','Խաղացող 2'],locked=false;
+const $=id=>document.getElementById(id);
+function setMode(m){mode=m;$('soloMode').classList.toggle('active',m==='solo');$('duoMode').classList.toggle('active',m==='duo');$('p2field').classList.toggle('hidden',m==='solo');$('p1').value=$('p1').value||'Խաղացող 1';}
+function hideAll(){['setup','game','result'].forEach(x=>$(x).classList.add('hidden'))}
+function startWorld(i){playSound('click');wi=i;qi=0;turn=0;scores=[0,0];names=[$('p1').value.trim()||'Խաղացող 1',$('p2').value.trim()||'Խաղացող 2'];locked=false;hideAll();$('game').classList.remove('hidden');$('worldTitle').textContent=worlds[wi].name;$('modeLabel').textContent=mode==='solo'?'ՄԵԿ ԽԱՂԱՑՈՂ':'ԶՈՒՅԳՈՎ ՄՐՑՈՒՄ';draw()}
+function draw(){locked=false;let q=worlds[wi].qs[qi];$('qnum').textContent=`ՀԱՐՑ ${qi+1} / 5`;$('bar').style.width=(qi*20)+'%';$('question').textContent=q[0];$('feedback').textContent='';$('feedback').className='feedback';$('explain').classList.add('hidden');$('next').classList.add('hidden');$('turnlabel').textContent=mode==='solo'?'ՔՈ ՀԱՐՑԸ':`ՀԵՐԹԸ՝ ${names[turn]}`;renderScores();$('answers').innerHTML='';q[1].forEach((v,i)=>{let b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+i)+'. '+v;b.onclick=()=>answer(i,b);$('answers').appendChild(b)})}
+function renderScores(){$('scores').innerHTML='';let count=mode==='solo'?1:2;for(let i=0;i<count;i++){let d=document.createElement('div');d.className='score';d.innerHTML=`<span>${names[i]} ${mode==='duo'&&turn===i?'• ՀԵՐԹԸ':' '}</span><b>${scores[i]} <small style="font-size:11px;color:#aab4d4">միավոր</small></b>`;$('scores').appendChild(d)}}
+function answer(i,btn){if(locked)return;locked=true;let q=worlds[wi].qs[qi],ok=i===q[2];[...$('answers').children].forEach((b,j)=>{b.disabled=true;if(j===q[2])b.classList.add('correct')});if(!ok)btn.classList.add('wrong');if(ok){playSound('correct');scores[turn]+=10;$('feedback').textContent='ՃԻՇՏ ՊԱՏԱՍԽԱՆ • +10 միավոր';$('feedback').classList.add('good')}else{playSound('wrong');$('feedback').textContent='ՍԽԱԼ ՊԱՏԱՍԽԱՆ • Այս անգամ միավոր չվաստակեցիր';$('feedback').classList.add('bad')}$('explain').textContent='ԲԱՑԱՏՐՈՒԹՅՈՒՆ · '+q[3];$('explain').classList.remove('hidden');renderScores();$('next').textContent=qi===4?'Տեսնել արդյունքը →':'Հաջորդ հարցը →';$('next').classList.remove('hidden')}
+function nextQ(){if(qi<4){qi++;if(mode==='duo')turn=1-turn;draw()}else finish()}
+function finish(){playSound('finish');hideAll();$('result').classList.remove('hidden');$('bar').style.width='100%';let text='',title='Աշխարհն ավարտված է',trophy='🏆';if(mode==='solo'){title='Ապրե՛ս, '+names[0]+'։';text=`Դու հավաքեցիր ${scores[0]} միավոր՝ հնարավոր 50-ից։ ${scores[0]===50?'Կատարյալ արդյունք։':'Շարունակի՛ր մարզվել և փորձիր նորից։'}`}else{let winner=scores[0]===scores[1]?'Ոչ ոք․ ոչ-ոքի է։':scores[0]>scores[1]?names[0]+' հաղթեց։':names[1]+' հաղթեց։';title=scores[0]===scores[1]?'Հավասար պայքար։':'Հաղթողը՝ '+(scores[0]>scores[1]?names[0]:names[1])+'։';text=winner+' Հիանալի մրցակցություն։';trophy=scores[0]===scores[1]?'🤝':'🏆'}$('trophy').textContent=trophy;$('resultTitle').textContent=title;$('resultText').textContent=text;$('finalScores').innerHTML=mode==='solo'?`<div class="chip" style="display:inline-block">${names[0]}՝ ${scores[0]} / 50</div>`:`<div class="scoreboard"><div class="score"><span>${names[0]}</span><b>${scores[0]}</b></div><div class="score"><span>${names[1]}</span><b>${scores[1]}</b></div></div>`}
+function backToSetup(){playSound('click');hideAll();$('setup').classList.remove('hidden')}
+function replay(){startWorld(wi)}
+setMode('solo');
+</script></body></html>
